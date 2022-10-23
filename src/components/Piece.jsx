@@ -15,7 +15,14 @@ export default function Piece({ color, shadow, id, updateHighlight }) {
     <div
       onClick={updateHighlight}
       id={`piece-${id}`}
-      className={'w-24 h-24 rounded-full ' + color + ' ' + shadow + ' ' + moved}
+      className={
+        'w-24 h-24 transition-all ease-in duration-1000 rounded-full ' +
+        color +
+        ' ' +
+        shadow +
+        ' ' +
+        moved
+      }
     ></div>
   )
 }

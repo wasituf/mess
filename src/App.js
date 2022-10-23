@@ -162,10 +162,8 @@ function App() {
 
       if (opponentPiece !== null) {
         updateScore(opponentPiece)
-        opponentPiece.parentElement.removeChild(opponentPiece)
       } else {
         updateScore(blockedPieces[0])
-        blockedPieces[0].parentElement.removeChild(blockedPieces[0])
       }
     } else if (blockedPieces.length === 3) {
       let opponentPiece = null
@@ -178,18 +176,14 @@ function App() {
 
       if (opponentPiece !== null) {
         updateScore(opponentPiece)
-        opponentPiece.parentElement.removeChild(opponentPiece)
       } else {
         updateScore(blockedPieces[0])
-        blockedPieces[0].parentElement.removeChild(blockedPieces[0])
       }
 
       updateScore(blockedPieces[0])
-      blockedPieces[0].parentElement.removeChild(blockedPieces[0])
     } else {
       blockedPieces.forEach(piece => {
         updateScore(piece)
-        piece.parentElement.removeChild(piece)
       })
     }
   }
@@ -206,6 +200,15 @@ function App() {
     } else if (+localStorage.getItem('scoreP2') >= 4) {
       setWinner('p2')
     }
+
+    if (piece.classList.contains('bg-lightGray')) {
+      piece.style.transform = 'translateY(100vh)'
+    } else {
+      piece.style.transform = 'translateY(-100vh)'
+    }
+    setTimeout(() => {
+      piece.parentElement.removeChild(piece)
+    }, 1000)
   }
 
   useEffect(() => {
@@ -236,7 +239,7 @@ function App() {
       className='flex w-screen h-screen justify-center items-center'
     >
       {winner && (
-        <div className='absolute top-0 left-0 h-screen w-screen bg-black text-center text-white text-4xl  font-bold z-10'>
+        <div className='absolute top-0 left-0 h-screen w-screen bg-black text-center text-white text-4xl  font-bold z-40'>
           {winner === 'p1' ? (
             <div className='translate-y-[50vh]'>Player 1 Wins</div>
           ) : (
