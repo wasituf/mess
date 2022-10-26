@@ -138,14 +138,10 @@ function App() {
       }
     })
 
-    if (blockedPieces.length > 1) {
+    if (blockedPieces.length > 0) {
       removePieces(
         blockedPieces.filter(piece => piece.classList.contains('moved')),
       )
-    } else if (blockedPieces.length === 1) {
-      if (blockedPieces[0].classList.contains('moved')) {
-        blockedPieces[0].parentElement.removeChild(blockedPieces[0])
-      }
     }
   }
 
@@ -186,7 +182,7 @@ function App() {
       }
 
       updateScore(blockedPieces[0])
-    } else {
+    } else if (blockedPieces.length === 1) {
       blockedPieces.forEach(piece => {
         updateScore(piece)
       })
