@@ -20,9 +20,7 @@ export default function Pos({ id, updateHighlight, executeTurn }) {
     <div
       id={id}
       onClick={e => {
-        console.log(e.target)
         if (e.target.classList.contains('highlight')) {
-          console.log('yes')
           if (localStorage.getItem('turn') === 'lightGray') {
             localStorage.setItem('turn', 'darkGray')
           } else {

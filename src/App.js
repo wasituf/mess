@@ -1,6 +1,7 @@
 import React from 'react'
 import bg from './mess-bg.png'
 import Pos from './components/Pos'
+import PostMatchScreen from './components/PostMatchScreen'
 import { useState, useEffect } from 'react'
 
 function App() {
@@ -137,17 +138,23 @@ function App() {
       }
     })
 
-    if (blockedPieces.length > 0) {
+    if (blockedPieces.length) {
+      console.log(blockedPieces)
+    }
+
+    if (blockedPieces.length > 1) {
       removePieces(
         blockedPieces.filter(piece => piece.classList.contains('moved')),
       )
+    } else if (blockedPieces.length === 1) {
+      updateScore(blockedPieces[0])
     }
   }
 
   const removePieces = blockedPieces => {
     const pieceColor = document
       .getElementById(localStorage.getItem('currentPiece'))
-      .classList.contains('lightGray')
+      .classList.contains('bg-lightGray')
       ? 'lightGray'
       : 'darkGray'
 
@@ -189,6 +196,17 @@ function App() {
   }
 
   const updateScore = piece => {
+    const allPieces = document.querySelectorAll('div[id*="piece"]')
+
+    allPieces.forEach(piece => {
+      piece.style.pointerEvents = 'none'
+    })
+
+    for (let i = 1; i < 19; i++) {
+      const box = document.getElementById(i)
+      box.style.pointerEvents = 'none'
+    }
+
     if (piece.classList.contains('bg-lightGray')) {
       localStorage.setItem('scoreP1', +localStorage.getItem('scoreP1') + 1)
     } else if (piece.classList.contains('bg-darkGray')) {
@@ -196,9 +214,9 @@ function App() {
     }
 
     if (+localStorage.getItem('scoreP1') >= 4) {
-      setWinner('p1')
+      winCondition('p1')
     } else if (+localStorage.getItem('scoreP2') >= 4) {
-      setWinner('p2')
+      winCondition('p2')
     }
 
     if (piece.classList.contains('bg-lightGray')) {
@@ -206,9 +224,25 @@ function App() {
     } else {
       piece.style.transform = 'translateY(-100vh)'
     }
+
     setTimeout(() => {
       piece.parentElement.removeChild(piece)
+      allPieces.forEach(piece => {
+        piece.style.pointerEvents = 'auto'
+      })
+      for (let i = 1; i < 19; i++) {
+        const box = document.getElementById(i)
+        box.style.pointerEvents = 'auto'
+      }
     }, 1000)
+  }
+
+  const winCondition = player => {
+    setWinner(player)
+    setTimeout(() => {
+      const audio = document.getElementById('end-audio')
+      audio.play()
+    }, 300)
   }
 
   useEffect(() => {
@@ -238,17 +272,7 @@ function App() {
       }}
       className='flex w-screen h-screen justify-center items-center'
     >
-      {winner && (
-        <div className='absolute top-0 left-0 h-screen w-screen bg-black text-center text-white text-4xl  font-bold z-40'>
-          {winner === 'p1' ? (
-            <div className='translate-y-[50vh]'>Player 1 Wins</div>
-          ) : (
-            winner === 'p2' && (
-              <div className='translate-y-[50vh]'>Player 2 Wins</div>
-            )
-          )}
-        </div>
-      )}
+      {winner && <PostMatchScreen winner={winner} />}
       <img
         src={bg}
         alt=''
@@ -260,7 +284,7 @@ function App() {
         className='w-full h-full justify-between items-center flex-col hidden edge:flex'
       >
         <div className='rotate-180 grid grid-cols-3 gap-8 bg-zinc-900 px-16 py-4 rounded-t-2xl'>
-          <div className='text-3xl font-semibold text-white'>PLAYER 1</div>
+          <div className='text-3xl font-semibold text-white'>BLACK</div>
           <div className='border-r-4 mx-auto border-white'></div>
           <div className='text-3xl font-semibold text-white'>{scoreP1}</div>
         </div>
@@ -269,7 +293,7 @@ function App() {
           {positions}
         </div>
         <div className='grid grid-cols-3 gap-8 bg-zinc-900 px-16 py-4 rounded-t-2xl'>
-          <div className='text-3xl font-semibold text-white'>PLAYER 2</div>
+          <div className='text-3xl font-semibold text-white'>WHITE</div>
           <div className='border-r-4 mx-auto border-white'></div>
           <div className='text-3xl font-semibold text-white'>{scoreP2}</div>
         </div>

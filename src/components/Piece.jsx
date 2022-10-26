@@ -9,7 +9,7 @@ export default function Piece({ color, shadow, id, updateHighlight }) {
     } else {
       setMoved('moved')
     }
-  }, [])
+  }, [id])
 
   return (
     <div
