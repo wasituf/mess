@@ -138,16 +138,14 @@ function App() {
       }
     })
 
-    if (blockedPieces.length) {
-      console.log(blockedPieces)
-    }
-
     if (blockedPieces.length > 1) {
       removePieces(
         blockedPieces.filter(piece => piece.classList.contains('moved')),
       )
     } else if (blockedPieces.length === 1) {
-      updateScore(blockedPieces[0])
+      if (blockedPieces[0].classList.contains('moved')) {
+        blockedPieces[0].parentElement.removeChild(blockedPieces[0])
+      }
     }
   }
 
